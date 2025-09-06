@@ -35,14 +35,14 @@
     * {
         font-size: 0.875rem;
     }
-}
 
-[x-cloak] {
-    display: none;
-}
+    [x-cloak] {
+        display: none;
+    }
 
-input:focus {
-    border-color: transparent;
-    outline: none;
-    box-shadow: none;
+    input:focus {
+        border-color: transparent;
+        outline: none;
+        box-shadow: none;
+    }
 }
