@@ -1,22 +1,21 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
-import Welcome from '@/Components/Welcome.vue';
+import AppLayout from "@/Layouts/AppLayout.vue";
+import Card from "primevue/card";
 </script>
 
 <template>
     <AppLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Dashboard
-            </h2>
-        </template>
-
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <Welcome />
-                </div>
-            </div>
-        </div>
+        <Card>
+            <template #title>Simple Card</template>
+            <template #content>
+                <p class="m-0">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Inventore sed consequuntur error repudiandae numquam
+                    deserunt quisquam repellat libero asperiores earum nam
+                    nobis, culpa ratione quam perferendis esse, cupiditate neque
+                    quas!
+                </p>
+            </template>
+        </Card>
     </AppLayout>
 </template>
