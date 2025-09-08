@@ -1,12 +1,6 @@
 <script setup>
-import { Head, Link, useForm } from "@inertiajs/vue3";
-import AuthenticationCard from "@/Components/AuthenticationCard.vue";
-import AuthenticationCardLogo from "@/Components/AuthenticationCardLogo.vue";
-import Checkbox from "@/Components/Checkbox.vue";
-import InputError from "@/Components/InputError.vue";
-import InputLabel from "@/Components/InputLabel.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import TextInput from "@/Components/TextInput.vue";
+import { Head, useForm } from "@inertiajs/vue3";
+
 defineProps({
     canResetPassword: Boolean,
     status: String,
@@ -15,7 +9,7 @@ defineProps({
 const form = useForm({
     email: "",
     password: "",
-    remember: false,
+    remember: true,
 });
 
 const submit = () => {
@@ -29,69 +23,46 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Log in" />
+    <Head title="เข้าสู่ระบบ" />
 
-    <AuthenticationCard>
-        <template #logo>
-            <AuthenticationCardLogo />
-        </template>
-
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
-        </div>
-
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-                <TextInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-                <InputError class="mt-2" :message="form.errors.email" />
+    <div class="min-h-screen flex justify-center items-center">
+        <form class="max-w-lg w-full" @submit.prevent="submit">
+            <div class="flex flex-col gap-1 mb-3">
+                <label for="email">อีเมล:</label>
+                <input type="email" id="email" v-model="form.email" required />
+                <span v-if="form.errors.email" class="text-red-500">
+                    {{ form.errors.email }}
+                </span>
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-                <TextInput
+            <div class="flex flex-col gap-1 mb-1.5">
+                <label for="password">รหัสผ่าน:</label>
+                <input
+                    type="password"
                     id="password"
                     v-model="form.password"
-                    type="password"
-                    class="mt-1 block w-full"
                     required
-                    autocomplete="current-password"
                 />
-                <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
-            <div class="block mt-4">
-                <label class="flex items-center">
-                    <Checkbox v-model:checked="form.remember" name="remember" />
-                    <span class="ms-2 text-sm text-gray-600">Remember me</span>
-                </label>
+            <div class="mb-5">
+                <input
+                    class="mr-1"
+                    type="checkbox"
+                    id="remember"
+                    v-model="form.remember"
+                />
+                <label for="remember">จดจำฉัน</label>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <Link
-                    v-if="canResetPassword"
-                    :href="route('password.request')"
-                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            <div>
+                <button
+                    class="bg-gray-200 px-3 py-1.5 rounded border border-gray-800 w-full"
+                    type="submit"
                 >
-                    Forgot your password?
-                </Link>
-
-                <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Log in
-                </PrimaryButton>
+                    เข้าสู่ระบบ
+                </button>
             </div>
         </form>
-    </AuthenticationCard>
+    </div>
 </template>
