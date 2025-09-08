@@ -70,7 +70,7 @@ const regions = [
 ];
 const deleteprovinces = (id) => {
     confirm.require({
-        message: "คุณแน่ใจหรือไม่ว่าต้องการลบจังหวัดนี้ ?",
+        message: "คุณแน่ใจหรือไม่ว่าต้องการลบจังหวัดนี้?",
         header: "ยืนยันการลบ",
         rejectProps: {
             label: "ยกเลิก",

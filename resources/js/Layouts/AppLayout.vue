@@ -1,10 +1,11 @@
 <script setup>
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, router } from "@inertiajs/vue3";
 import { ref } from "vue";
 import { useFlash } from "@/Composables/useFlash";
 import Toast from "primevue/toast";
 import ConfirmPopup from "primevue/confirmpopup";
 import Menu from "primevue/menu";
+import { useConfirm } from "primevue/useconfirm";
 
 defineProps({
     title: {
@@ -13,9 +14,11 @@ defineProps({
     },
 });
 
+const confirm = useConfirm();
+
 const items = ref([
     {
-        label: "Menu",
+        label: "เมนู",
         items: [
             {
                 label: "หน้าแรก",
@@ -27,10 +30,55 @@ const items = ref([
                 href: "provinces.index",
                 icon: "pi pi-map",
             },
+            {
+                label: "หมวดหมู่",
+                href: "categories.index",
+                icon: "pi pi-folder-open",
+            },
+        ],
+    },
+    {
+        label: "จัดการ",
+        items: [
+            {
+                label: "โหมดกลางคืน",
+                is_button: true,
+                icon: "pi pi-moon",
+                command: () => {
+                    //
+                },
+            },
+            {
+                label: "ออกจากระบบ",
+                is_button: true,
+                icon: "pi pi-sign-out",
+                command: () => {
+                    logout();
+                },
+            },
         ],
     },
 ]);
 
+const logout = () => {
+    confirm.require({
+        message: "คุณแน่ใจหรือไม่ว่าต้องการออกจากระบบ?",
+        header: "ยืนยันการออกจากระบบ",
+        rejectProps: {
+            label: "ยกเลิก",
+            severity: "secondary",
+            outline: true,
+        },
+        acceptProps: {
+            label: "ยืนยัน",
+            severity: "danger",
+        },
+        icon: "pi pi-exclamation-triangle",
+        accept: () => {
+            router.post(route("logout"));
+        },
+    });
+};
 useFlash();
 </script>
 
@@ -46,17 +94,25 @@ useFlash();
             >
                 <template #item="{ item, props }">
                     <Link
+                        v-if="!item.is_button"
+                        v-bind="props.action"
                         :class="{
                             '!text-primary': route().current(item.href),
                         }"
                         :href="route(item.href)"
-                        v-bind="props.action"
                     >
                         <span :class="item.icon" />
                         <span class="ml-2">
                             {{ item.label }}
                         </span>
                     </Link>
+
+                    <button v-if="item.is_button" v-bind="props.action">
+                        <span :class="item.icon" />
+                        <span class="ml-2">
+                            {{ item.label }}
+                        </span>
+                    </button>
                 </template>
             </Menu>
         </div>
