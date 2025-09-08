@@ -5,7 +5,7 @@ import Card from "primevue/card";
 
 <template>
     <AppLayout title="Dashboard">
-        <Card>
+        <Card v-for="i in Number(22)">
             <template #title>Simple Card</template>
             <template #content>
                 <p class="m-0">
