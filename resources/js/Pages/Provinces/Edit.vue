@@ -165,7 +165,12 @@ const submit = () => {
                     <div class="col-span-2 flex justify-end">
                         <ButtonGroup>
                             <Button
-                                @click="form.reset()"
+                                @click="
+                                    () => {
+                                        form.reset();
+                                        form.clearErrors();
+                                    }
+                                "
                                 type="button"
                                 label="ยกเลิก"
                                 icon="pi pi-times"

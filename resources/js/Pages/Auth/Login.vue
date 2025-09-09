@@ -57,7 +57,7 @@ const submit = () => {
 
             <div>
                 <button
-                    class="bg-gray-200 px-3 py-1.5 rounded border border-gray-800 w-full"
+                    class="bg-gray-200 px-3 py-1.5 border border-gray-400 w-full"
                     type="submit"
                 >
                     เข้าสู่ระบบ

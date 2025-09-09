@@ -5,74 +5,28 @@ import Card from "primevue/card";
 import Button from "primevue/button";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
-import Badge from "primevue/badge";
-import InputText from "primevue/inputtext";
 import { ref } from "vue";
 import { FilterMatchMode } from "@primevue/core/api";
-import Select from "primevue/select";
+import InputText from "primevue/inputtext";
 import { useConfirm } from "primevue/useconfirm";
 
 defineProps({
-    provinces: {
+    categories: {
         type: Object,
         required: true,
     },
 });
 
-const getBadgeColor = (region) => {
-    switch (region) {
-        case "north":
-            return "!bg-blue-500";
-        case "northeast":
-            return "!bg-yellow-500";
-        case "central":
-            return "!bg-green-500";
-        case "east":
-            return "!bg-purple-500";
-        case "west":
-            return "!bg-pink-500";
-        case "south":
-            return "!bg-red-500";
-    }
-};
-
-const getBadgeText = (region) => {
-    switch (region) {
-        case "north":
-            return "ภาคเหนือ";
-        case "northeast":
-            return "ภาคตะวันออกเฉียงเหนือ";
-        case "central":
-            return "ภาคกลาง";
-        case "east":
-            return "ภาคตะวันออก";
-        case "west":
-            return "ภาคตะวันตก";
-        case "south":
-            return "ภาคใต้";
-    }
-};
+const confirm = useConfirm();
 
 const filters = ref({
     name_th: { value: null, matchMode: FilterMatchMode.CONTAINS },
     name_en: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    region: { value: null, matchMode: FilterMatchMode.EQUALS },
 });
 
-const regions = [
-    { label: "ภาคเหนือ", value: "north" },
-    { label: "ภาคตะวันออกเฉียงเหนือ", value: "northeast" },
-    { label: "ภาคกลาง", value: "central" },
-    { label: "ภาคตะวันออก", value: "east" },
-    { label: "ภาคตะวันตก", value: "west" },
-    { label: "ภาคใต้", value: "south" },
-];
-
-const confirm = useConfirm();
-
-const deleteProvinces = (id) => {
+const deleteCategory = (id) => {
     confirm.require({
-        message: "คุณแน่ใจหรือไม่ว่าต้องการลบจังหวัดนี้?",
+        message: "คุณแน่ใจหรือไม่ว่าต้องการลบหมวดหมู่นี้?",
         header: "ยืนยันการลบ",
         rejectProps: {
             label: "ยกเลิก",
@@ -85,39 +39,49 @@ const deleteProvinces = (id) => {
         },
         icon: "pi pi-exclamation-triangle",
         accept: () => {
-            router.delete(route("provinces.destroy", { province: id }));
+            router.delete(route("categories.destroy", { category: id }));
         },
     });
 };
 </script>
 
 <template>
-    <AppLayout title="จังหวัดทั้งหมด">
+    <AppLayout title="หมวดหมู่">
         <Card>
             <template #content>
                 <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-3xl font-semibold">จังหวัดทั้งหมด</h1>
-                    <Link :href="route('provinces.create')">
+                    <h1 class="text-3xl font-semibold">หมวดหมู่ทั้งหมด</h1>
+                    <Link :href="route('categories.create')">
                         <Button>
                             <i class="pi pi-plus-circle"></i>
-                            เพิ่มจังหวัด
+                            เพิ่มหมวดหมู่
                         </Button>
                     </Link>
                 </div>
                 <div>
                     <DataTable
                         v-model:filters="filters"
-                        :value="provinces"
-                        stripedRows
-                        showGridlines
-                        responsiveLayout="scroll"
+                        :value="categories"
                         dataKey="id"
                         sortField="id"
                         :sortOrder="1"
+                        stripedRows
+                        showGridlines
+                        responsiveLayout="scroll"
                         filterDisplay="row"
                     >
                         <Column field="id" header="#" sortable></Column>
+                        <Column field="icon" header="อิโมจิ" sortable>
+                            <template #body="{ data }">
+                                <span class="text-3xl">
+                                    {{ data.icon }}
+                                </span>
+                            </template>
+                        </Column>
                         <Column field="name_th" header="ชื่อไทย" sortable>
+                            <template #body="{ data }">
+                                {{ data.name_th }}
+                            </template>
                             <template #filter="{ filterModel, filterCallback }">
                                 <InputText
                                     v-model="filterModel.value"
@@ -133,6 +97,9 @@ const deleteProvinces = (id) => {
                             header="ชื่อภาษาอังกฤษ"
                             sortable
                         >
+                            <template #body="{ data }">
+                                {{ data.name_en }}
+                            </template>
                             <template #filter="{ filterModel, filterCallback }">
                                 <InputText
                                     v-model="filterModel.value"
@@ -143,33 +110,20 @@ const deleteProvinces = (id) => {
                                 />
                             </template>
                         </Column>
-                        <Column field="region" header="ภูมิภาค" sortable>
-                            <template #body="{ data }">
-                                <Badge
-                                    :value="getBadgeText(data.region)"
-                                    :class="getBadgeColor(data.region)"
-                                />
-                            </template>
-                            <template #filter="{ filterModel, filterCallback }">
-                                <Select
-                                    v-model="filterModel.value"
-                                    :options="regions"
-                                    optionLabel="label"
-                                    optionValue="value"
-                                    placeholder="เลือกภูมิภาค"
-                                    class="w-full"
-                                    @change="filterCallback()"
-                                />
-                            </template>
+                        <Column
+                            field="description"
+                            header="รายละเอียด"
+                            sortable
+                        >
                         </Column>
                         <Column header="จัดการ">
                             <template #body="{ data }">
                                 <div class="flex gap-2">
                                     <Link
-                                        v-tooltip.top="'แก้ไขจังหวัด'"
+                                        v-tooltip.top="'แก้ไขหมวดหมู่'"
                                         :href="
-                                            route('provinces.edit', {
-                                                province: data.id,
+                                            route('categories.edit', {
+                                                category: data.id,
                                             })
                                         "
                                     >
@@ -180,8 +134,8 @@ const deleteProvinces = (id) => {
                                         />
                                     </Link>
                                     <Button
-                                        @click="deleteProvinces(data.id)"
-                                        v-tooltip.top="'ลบจังหวัด'"
+                                        @click="deleteCategory(data.id)"
+                                        v-tooltip.top="'ลบหมวดหมู่'"
                                         icon="pi pi-trash"
                                         rounded
                                         severity="danger"

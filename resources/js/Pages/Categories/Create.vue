@@ -5,51 +5,39 @@ import { Link, useForm } from "@inertiajs/vue3";
 import Button from "primevue/button";
 import ButtonGroup from "primevue/buttongroup";
 import InputText from "primevue/inputtext";
-import InputNumber from "primevue/inputnumber";
 import Message from "primevue/message";
-import { Select } from "primevue";
-import { ref } from "vue";
+import Textarea from "primevue/textarea";
 
 const form = useForm({
     name_th: "",
     name_en: "",
-    region: "",
-    latitude: "",
-    longitude: "",
+    icon: "",
+    description: "",
 });
 
-const regions = ref([
-    { label: "ภาคเหนือ", value: "north" },
-    { label: "ภาคตะวันออกเฉียงเหนือ", value: "northeast" },
-    { label: "ภาคกลาง", value: "central" },
-    { label: "ภาคตะวันออก", value: "east" },
-    { label: "ภาคตะวันตก", value: "west" },
-    { label: "ภาคใต้", value: "south" },
-]);
-
 const submit = () => {
-    form.post(route("provinces.store"));
+    form.post(route("categories.store"));
 };
 </script>
 
 <template>
-    <AppLayout title="เพิ่มจังหวัด">
+    <AppLayout title="เพิ่มหมวดหมู่">
         <Card>
             <template #content>
                 <div class="mb-6 flex items-center gap-3">
-                    <Link :href="route('provinces.index')">
+                    <Link :href="route('categories.index')">
                         <Button severity="secondary">
                             <i class="pi pi-arrow-left"></i>
                             ย้อนกลับ
                         </Button>
                     </Link>
-                    <h1 class="text-3xl font-semibold">เพิ่มจังหวัด</h1>
+                    <h1 class="text-3xl font-semibold">เพิ่มหมวดหมู่</h1>
                 </div>
 
                 <form @submit.prevent="submit" class="grid grid-cols-2 gap-6">
                     <div class="flex flex-col gap-1.5">
                         <label for="name_th">
-                            ชื่อจังหวัดภาษาไทย
+                            ชื่อหมวดหมู่ภาษาไทย
                             <span class="text-red-500">*</span>
                         </label>
                         <InputText
@@ -57,7 +45,7 @@ const submit = () => {
                             v-model="form.name_th"
                             name="name_th"
                             fluid
-                            placeholder="เช่น กรุงเทพมหานคร"
+                            placeholder="เช่น ธรรมชาติ"
                         />
                         <Message
                             v-if="form.errors.name_th"
@@ -71,7 +59,7 @@ const submit = () => {
 
                     <div class="flex flex-col gap-1.5">
                         <label for="name_en">
-                            ชื่อจังหวัดภาษาอังกฤษ
+                            ชื่อหมวดหมู่ภาษาอังกฤษ
                             <span class="text-red-500">*</span>
                         </label>
                         <InputText
@@ -79,7 +67,7 @@ const submit = () => {
                             v-model="form.name_en"
                             name="name_en"
                             fluid
-                            placeholder="เช่น Bangkok"
+                            placeholder="เช่น Nature"
                         />
                         <Message
                             v-if="form.errors.name_en"
@@ -92,65 +80,49 @@ const submit = () => {
                     </div>
 
                     <div class="flex flex-col gap-1.5">
-                        <label for="region">
-                            เลือกภูมิภาค
+                        <label for="icon">
+                            อิโมจิ
                             <span class="text-red-500">*</span>
                         </label>
-                        <Select
-                            id="region"
-                            v-model="form.region"
-                            name="region"
-                            :options="regions"
-                            optionLabel="label"
-                            optionValue="value"
+                        <InputText
+                            id="icon"
+                            v-model="form.icon"
+                            name="icon"
+                            fluid
+                            placeholder="เช่น 😀"
                         />
                         <Message
-                            v-if="form.errors.region"
+                            v-if="form.errors.icon"
                             severity="error"
                             size="small"
                             variant="simple"
                         >
-                            {{ form.errors.region }}
+                            {{ form.errors.icon }}
                         </Message>
                     </div>
 
-                    <div class="col-span-2 grid grid-cols-2 gap-6">
-                        <div class="flex flex-col gap-1.5">
-                            <label for="latitude">ละติจูด</label>
-                            <InputNumber
-                                id="latitude"
-                                v-model="form.latitude"
-                                name="latitude"
-                                fluid
-                                placeholder="8.0858"
-                            />
-                            <Message
-                                v-if="form.errors.latitude"
-                                severity="error"
-                                size="small"
-                                variant="simple"
-                            >
-                                {{ form.errors.latitude }}
-                            </Message>
-                        </div>
-                        <div class="flex flex-col gap-1.5">
-                            <label for="longitude">ลองติจูด</label>
-                            <InputNumber
-                                id="longitude"
-                                v-model="form.longitude"
-                                name="longitude"
-                                fluid
-                                placeholder="98.9174"
-                            />
-                            <Message
-                                v-if="form.errors.longitude"
-                                severity="error"
-                                size="small"
-                                variant="simple"
-                            >
-                                {{ form.errors.longitude }}
-                            </Message>
-                        </div>
+                    <div class="flex flex-col gap-1.5">
+                        <label for="description">
+                            รายละเอียด
+                            <span class="text-red-500">*</span>
+                        </label>
+                        <Textarea
+                            id="description"
+                            v-model="form.description"
+                            name="description"
+                            autoResize
+                            variant="filled"
+                            placeholder="สถานที่ท่องเที่ยวธรรมชาติ"
+                            rows="5"
+                        />
+                        <Message
+                            v-if="form.errors.description"
+                            severity="error"
+                            size="small"
+                            variant="simple"
+                        >
+                            {{ form.errors.description }}
+                        </Message>
                     </div>
 
                     <div class="col-span-2 flex justify-end">
